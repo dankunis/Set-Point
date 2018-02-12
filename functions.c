@@ -72,7 +72,7 @@ int delElement(struct Set **mainSet) {
  */
 int elementSearch (struct Set *mainSet, struct Point *requestPoint) {
 
-    for(int i = 0; i<mainSet->setSize; i++) {
+    for(int i = 0; i < mainSet->setSize; i++) {
         if(mainSet->setHead[i].x == requestPoint->x) {
             if(mainSet->setHead[i].y == requestPoint->y) {
                 return 1;
