@@ -3,7 +3,7 @@
 /*
  * Creates a Point
  */
-struct Point createPoint(unsigned x, unsigned y) {
+struct Point createPoint(unsigned char x, unsigned char y) {
 
     struct Point tmpPoint;
     tmpPoint.x = x;
@@ -28,15 +28,15 @@ struct Set *createSet() {
  * pass 0 to check while adding an element
  * pass 1 to check while deleting an element
  */
-int checkMemory(struct Set **mainSet, int operationCode) {
+int checkMemory(struct Set *mainSet, int operationCode) {
 
     if(operationCode) {
-        if ((*mainSet)->setSize % sizeStep == 0 && (*mainSet)->setSize >= sizeStep) {
-            (*mainSet)->setHead = (struct Point *)realloc((*mainSet)->setHead, sizeof(struct Point)*((*mainSet)->setSize+sizeStep));
+        if (mainSet->setSize % sizeStep == 0 && mainSet->setSize >= sizeStep) {
+            mainSet->setHead = (struct Point *)realloc(mainSet->setHead, sizeof(struct Point)*(mainSet->setSize+sizeStep));
         }
     } else {
-        if ((*mainSet)->setSize % sizeStep == 1 && (*mainSet)->setSize > sizeStep) {
-            (*mainSet)->setHead = (struct Point *)realloc((*mainSet)->setHead, sizeof(struct Point)*((*mainSet)->setSize-sizeStep));
+        if (mainSet->setSize % sizeStep == 1 && mainSet->setSize > sizeStep) {
+            mainSet->setHead = (struct Point *)realloc(mainSet->setHead, sizeof(struct Point)*(mainSet->setSize-sizeStep));
         }
     }
     return 1;
@@ -45,24 +45,24 @@ int checkMemory(struct Set **mainSet, int operationCode) {
 /*
  * Add a Point to the end of a Set
  */
-int addElement(struct Set **mainSet, struct Point *newElement) {
+int addElement(struct Set *mainSet, const struct Point *newElement) {
 
     checkMemory(mainSet, addCode);
-    (*mainSet)->setHead[(*mainSet)->setSize] = *newElement;
-    (*mainSet)->setSize++;
+    mainSet->setHead[mainSet->setSize] = *newElement;
+    mainSet->setSize++;
     return 1;
 }
 
 /*
  * Delete the last Point of a Set
  */
-int delElement(struct Set **mainSet) {
+int delElement(struct Set *mainSet) {
 
     checkMemory(mainSet, delCode);
-    if((*mainSet)->setSize == 0) {
+    if(mainSet->setSize == 0) {
         return 0;
     } else {
-        (*mainSet)->setSize--;
+        mainSet->setSize--;
         return 1;
     }
 }
@@ -103,15 +103,17 @@ int saveSet(struct Set *mainSet, char *filePath) {
 /*
  * Decodes and adds Points to a Set
  */
-int resetSet(struct Set **mainSet, char *filePath) {
+int resetSet(struct Set *mainSet, char *filePath) {
     FILE *setFile = fopen(filePath, "r");
     if(setFile == NULL) {
         return 0;
     } else {
-        char charPoint;
+        int tmp;
         struct Point newPoint;
-        while((charPoint = getc(setFile)) != EOF) {
-            newPoint = createPoint(charPoint>>4, charPoint & 15);
+        while((tmp = getc(setFile)) != EOF) {
+            unsigned char charPoint;
+            charPoint = tmp;
+            newPoint = createPoint(charPoint>>4, charPoint - ((charPoint>>4)<<4));
             addElement(mainSet, &newPoint);
         }
         return 1;

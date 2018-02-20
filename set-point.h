@@ -12,7 +12,7 @@
  * A simple structure to store a coordinate
  */
 struct Point {
-    char x:4, y:4;
+    unsigned char x:4, y:4;
 };
 
 /*
@@ -24,13 +24,13 @@ struct Set {
 };
 
 
-struct Point createPoint(unsigned x, unsigned y);
+struct Point createPoint(unsigned char x, unsigned char y);
 struct Set *createSet();
-int checkMemory(struct Set **mainSet, int operationCode);
-int addElement(struct Set **mainSet, struct Point *newElement);
-int delElement(struct Set **mainSet);
+int checkMemory(struct Set *mainSet, int operationCode);
+int addElement(struct Set *mainSet, const struct Point *newElement);
+int delElement(struct Set *mainSet);
 int elementSearch (struct Set *mainSet, struct Point *requestPoint);
 int saveSet(struct Set *mainSet, char *filePath);
-int resetSet(struct Set **mainSet, char *filePath);
+int resetSet(struct Set *mainSet, char *filePath);
 
 #endif
